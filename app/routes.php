@@ -16,3 +16,10 @@ Route::get('/', function()
 	//return View::make('hello');
     App::abort(404, 'Page not found');
 });
+Route::resource('tracks', 'TracksController');
+Route::get('tracks/search/{terms}', array('as' => 'tracks.search' , 'uses' => 'TracksController@search'));
+
+Route::get('NewTrackReleases', array('uses' => 'MetaTracksController@recentlyUploaded'));
+Route::get('MostViewedTracks', array('uses' => 'MetaTracksController@mostViewed'));
+
+Route::resource('artists', 'ArtistsController');
