@@ -9,7 +9,22 @@ class ArtistsController extends BaseController {
 	 */
 	public function index()
 	{
-		return Artist::with('tracks')->get();
+        if (Input::has('page')) {
+            $gender = Input::get('gender', 'all');
+            $type = Input::get('type', 'all');
+
+            Session::set('artist_filter_gender', $gender);
+            Session::set('artist_filter_type', $type);
+
+            $filters = array(
+                'gender' => $gender,
+                'type' => $type
+            );
+
+            return Response::json(Artist::getArtistsForPage(Input::get('page'), $filters));
+        } else {
+		  return Artist::with('tracks')->get();
+        }
 	}
 
 	/**
@@ -29,7 +44,7 @@ class ArtistsController extends BaseController {
 	 */
 	public function store()
 	{
-		//
+
 	}
 
 	/**
@@ -75,5 +90,21 @@ class ArtistsController extends BaseController {
 	{
 		//
 	}
+
+    public function search($searchTerms) {
+        $artists = Artist::getAll();
+        $searchResults = array();
+        $searchArray = explode("+", preg_replace('/\s/', '+', $searchTerms));
+        foreach ($searchArray as $searchTerm) {
+            $cleanedSearchTerm = strtolower(preg_replace('/[^a-zA-Z0-9-_]/', "", $searchTerm));
+            foreach($artists as $artist) {
+                if (strpos(strtolower($artist->name), $cleanedSearchTerm) !== FALSE) {
+                    $searchResults[$artist->id] = $artist;
+                }
+            }
+        }
+
+        return Response::json($searchResults);
+    }
 
 }

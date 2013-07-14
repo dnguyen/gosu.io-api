@@ -23,3 +23,4 @@ Route::get('NewTrackReleases', array('uses' => 'MetaTracksController@recentlyUpl
 Route::get('MostViewedTracks', array('uses' => 'MetaTracksController@mostViewed'));
 
 Route::resource('artists', 'ArtistsController');
+Route::get('artists/search/{terms}', array('uses' => 'ArtistsController@search'));

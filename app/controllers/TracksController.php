@@ -9,22 +9,15 @@ class TracksController extends BaseController {
 	 */
 	public function index()
 	{
+
+        $sortType = Input::get('sort', 'uploaded');
+        $order = Input::get('order', 'desc');
+        $sortSettings = array(
+            'type' => $sortType,
+            'order' => $order
+        );
+
         if (Input::has('page')) {
-
-            $sortType = Input::get('sortType', 'uploaded');
-            $order = Input::get('order', 'desc');
-            $applySort = Input::get('sort', 'false');
-
-            if ($applySort == "true") {
-                Session::put('tracksSortType', $sortType);
-                Session::put('tracksSortOrder', $order);
-            }
-
-            $sortSettings = array(
-                'type' => Session::get('tracksSortType', 'uploaded'),
-                'order' => Session::get('tracksSortOrder', 'desc')
-            );
-
             $response = array();
             $response['tracks'] = Track::getTracksForPage(Input::get('page'), $sortSettings);
             $response['pageCount'] = Track::getTracksTotalPageCount();
@@ -32,8 +25,7 @@ class TracksController extends BaseController {
 
             return Response::json($response);
         } else {
-
-            return Response::json(Track::getAll());
+            return Response::json(Track::getAllSorted($sortType, $order));
         }
 	}
 
@@ -102,11 +94,11 @@ class TracksController extends BaseController {
 	}
 
     public function search($searchTerms) {
-        $tracks = Track::getAllSorted(Session::get('tracksSortType'), Session::get('tracksSortOrder'));
-        $sortSettings = array(
-            'type' => Session::get('tracksSortType'),
-            'order' => Session::get('tracksSortOrder')
-        );
+
+        $sortType = Input::get('sort', 'uploaded');
+        $order = Input::get('order', 'desc');
+
+        $tracks = Track::getAllSorted($sortType, $order);
 
         $searchResults = array();
         $searchArray = explode("+", preg_replace('/\s/', "+", $searchTerms));
@@ -120,11 +112,7 @@ class TracksController extends BaseController {
             }
         }
 
-        $response = array();
-        $response['tracks'] = $searchResults;
-        $response['sortSettings'] = $sortSettings;
-
-        return Response::json($response);
+        return Response::json($searchResults);
     }
 
 }
