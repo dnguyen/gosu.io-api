@@ -21,7 +21,6 @@ class TracksController extends BaseController {
             $response = array();
             $response['tracks'] = Track::getTracksForPage(Input::get('page'), $sortSettings);
             $response['pageCount'] = Track::getTracksTotalPageCount();
-            $response['sortSettings'] = $sortSettings;
 
             return Response::json($response);
         } else {

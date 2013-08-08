@@ -14,7 +14,8 @@ class Artist extends Eloquent {
         return $artists;
     }
 
-    public static function getArtistsForPage($page, $filters = array()) {
+    public static function getArtistsForPage($page, $filters = array(), $sorts = array()) {
+        // Get number of results
         $artistsMatchedCountQuery = DB::table('artists')->select('*');
 
         if ($filters['gender'] != 'all')
@@ -35,7 +36,12 @@ class Artist extends Eloquent {
         if ($filters['type'] != 'all')
             $artistsQuery->where('type', $filters['type']);
 
-        $artistsQuery->orderBy('name', '');
+        if ($sorts['order'] === 'desc')
+            $sorts['order'] = "";
+        else
+            $sorts['order'] = "desc";
+
+        $artistsQuery->orderBy($sorts['type'], $sorts['order']);
 
         if ($artistsMatchedCount > 12)
             $artistsQuery->skip($start)->take($end);
@@ -43,5 +49,11 @@ class Artist extends Eloquent {
         $artists = $artistsQuery->get();
 
         return $artists;
+    }
+
+    public static function getArtistsTotalPageCount() {
+        $totalPagecount = ceil(DB::table('artists')->count() / 12);
+
+        return $totalPagecount;
     }
 }

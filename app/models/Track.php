@@ -52,8 +52,6 @@ class Track extends Eloquent {
     }
 
     public static function getTracksForPage($page, $sorts = array()) {
-        $totalPagecount = ceil(DB::table('tracks')->count() / 25);
-
         if ($sorts['type'] === 'artistName' || $sorts['type'] === 'title') {
 
             if ($sorts['type'] === 'artistName')

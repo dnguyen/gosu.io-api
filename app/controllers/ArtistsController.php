@@ -10,18 +10,27 @@ class ArtistsController extends BaseController {
 	public function index()
 	{
         if (Input::has('page')) {
+
+            $sortType = Input::get('sort', 'name');
+            $order = Input::get('order', 'ascd');
             $gender = Input::get('gender', 'all');
             $type = Input::get('type', 'all');
-
-            Session::set('artist_filter_gender', $gender);
-            Session::set('artist_filter_type', $type);
 
             $filters = array(
                 'gender' => $gender,
                 'type' => $type
             );
 
-            return Response::json(Artist::getArtistsForPage(Input::get('page'), $filters));
+            $sorts = array(
+                'type' => $sortType,
+                'order' => $order
+            );
+
+            $response = array();
+            $response['artists'] = Artist::getArtistsForPage(Input::get('page'), $filters, $sorts);
+            $response['pageCount'] = Artist::getArtistsTotalPageCount();
+
+            return Response::json($response);
         } else {
 		  return Artist::with('tracks')->get();
         }
