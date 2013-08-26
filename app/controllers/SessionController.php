@@ -13,7 +13,7 @@ class SessionController extends BaseController {
 		if (UserSession::isLoggedIn()) {
 
 		}
-		return Response::json($response);
+		return Response::json(UserSession::getAllData());
 	}
 
 	/**
@@ -77,7 +77,8 @@ class SessionController extends BaseController {
 	 */
 	public function destroy($id)
 	{
-		//
+
+        return "test destroy";
 	}
 
 }
