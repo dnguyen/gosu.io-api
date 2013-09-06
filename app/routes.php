@@ -28,3 +28,7 @@ Route::get('artists/search/{terms}', array('uses' => 'ArtistsController@search')
 Route::resource('session', 'SessionController');
 Route::resource('auth', 'AuthController');
 Route::delete('auth', array('uses' => 'AuthController@logout'));
+
+Route::resource('users', 'UsersController');
+
+Route::resource('playlists', 'PlaylistsController');

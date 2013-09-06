@@ -9,6 +9,16 @@ class User extends Eloquent {
 	protected $table = 'users';
 	public $timestamps = false;
 
+	public static function createNew($username, $password) {
+		$query = DB::table('users')->insert(
+			array(
+				'username' => $username,
+				'password' => Hash::make($password)
+			)
+		);
+
+	}
+
 	public static function exists($username) {
 		$query = DB::table('users')->select('username')->where('username', '=', $username);
 		$count = $query->count();
