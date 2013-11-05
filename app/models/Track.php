@@ -46,6 +46,7 @@ class Track extends Eloquent {
         $tracks = DB::table('tracks')
         ->select(array('tracks.*', 'artists.name', 'tracks.id AS id', 'tracks.id AS trackId', 'artists.id AS artistId'))
         ->join('artists', 'tracks.artist', '=', 'artists.id')
+        ->where('tracks.published', '=', '1')
         ->orderBy($sortType, $order)->get();
 
         return $tracks;
@@ -72,6 +73,7 @@ class Track extends Eloquent {
         $tracks = DB::table('tracks')
         ->select(array('tracks.*', 'artists.name', 'tracks.id AS id', 'tracks.id AS trackId', 'artists.id AS artistId'))
         ->join('artists', 'tracks.artist', '=', 'artists.id')
+        ->where('tracks.published', '=', '1')
         ->orderBy($sorts['type'], $sorts['order'])
         ->skip($start)->take($end)->get();
 
@@ -100,6 +102,19 @@ class Track extends Eloquent {
         ->select(array('tracks.*', 'artists.name', 'tracks.id AS id', 'tracks.id AS trackId', 'artists.id AS artistId'))
         ->join('artists', 'tracks.artist', '=', 'artists.id')
         ->orderBy('uploaded', 'DESC')
+        ->take($count)->get();
+
+        return $tracks;
+    }
+
+    public static function getComingSoon($count) {
+        $tracks = DB::table('coming_soon_tracks')
+        ->select(array(
+               'coming_soon_tracks.*',
+               'artists.name AS artistName'
+               ))
+        ->join('artists', 'coming_soon_tracks.artistId', '=', 'artists.id')
+        ->orderBy('date', 'DESC')
         ->take($count)->get();
 
         return $tracks;

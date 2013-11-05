@@ -12,23 +12,25 @@ class AuthController extends BaseController {
         $username = Input::get('username');
         $password = Input::get('password');
 
+        $response = new stdClass();
         if (User::exists($username)) {
             $user = User::getByUserName($username);
             if (Hash::check($password, $user->password)) {
-                $response = new stdClass();
                 $response->status = true;
                 $response->message = "Logged in";
 
                 UserSession::setLogin();
                 UserSession::setUsername($username);
-
-                return Response::json($response);
             } else {
-                echo 'bad';
+                $response->status = false;
+                $response->message = "The username or password is incorrect.";
             }
         } else {
-            echo 'user no exist';
+            $response->status = false;
+            $response->message = "The username or password is incorrect.";
         }
+
+        return Response::json($response);
     }
 
     public function logout() {

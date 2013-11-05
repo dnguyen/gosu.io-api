@@ -10,4 +10,9 @@ class MetaTracksController extends BaseController {
         $count = Input::get('count', 5);
         return Response::json(Track::getMostViewed($count));
     }
+
+    public function comingSoon() {
+        $count = Input::get('count', 5);
+        return Response::json(Track::getComingSoon($count));
+    }
 }

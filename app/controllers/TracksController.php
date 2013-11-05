@@ -110,8 +110,9 @@ class TracksController extends BaseController {
                 }
             }
         }
-
-        return Response::json($searchResults);
+        $response = array();
+        $response["tracks"] = $searchResults;
+        return Response::json($response);
     }
 
 }

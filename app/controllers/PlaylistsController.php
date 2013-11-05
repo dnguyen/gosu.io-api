@@ -31,7 +31,6 @@ class PlaylistsController extends BaseController {
      */
     public function store()
     {
-        //
     }
 
     /**
@@ -67,7 +66,10 @@ class PlaylistsController extends BaseController {
      */
     public function update($id)
     {
-        //
+
+        $responseObj = array();
+        $responseObj['test'] = $id;
+        return Response::json($responseObj);
     }
 
     /**

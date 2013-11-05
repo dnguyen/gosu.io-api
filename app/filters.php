@@ -13,13 +13,28 @@
 
 App::before(function($request)
 {
-	//
+    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        $statusCode = 204;
+        $headers = [
+            'Access-Control-Allow-Origin'      => 'http://dev.gosukpop.com',
+            'Access-Control-Allow-Methods'     => 'GET, POST, PUT, DELETE, OPTIONS',
+            'Access-Control-Allow-Headers'     => 'origin, content-type, accept, authorization, x-requested-with, enctype, Content-Disposition',
+            'Access-Control-Allow-Credentials' => 'true',
+            'Access-Control-Max-Age'           => '86400'
+        ];
+        return Response::make(null, $statusCode, $headers);
+    }
 });
 
 
 App::after(function($request, $response)
 {
-	//
+    $response->headers->set('Access-Control-Allow-Origin', 'http://dev.gosukpop.com');
+    $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    $response->headers->set('Access-Control-Allow-Headers', 'origin, content-type, accept, authorization, x-requested-with, enctype, Content-Disposition');
+    $response->headers->set('Access-Control-Allow-Credentials', 'true');
+    $response->headers->set('Access-Control-Max-Age','86400');
+    return $response;
 });
 
 /*
