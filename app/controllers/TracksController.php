@@ -56,7 +56,7 @@ class TracksController extends BaseController {
 	 */
 	public function show($id)
 	{
-		return Response::json(Track::getTrack($id));
+		return Response::json(Track::getTrack($id)[0]);
 	}
 
 	/**
@@ -105,7 +105,7 @@ class TracksController extends BaseController {
         foreach ($searchArray as $searchTerm) {
             $cleanedSearchTerm = strtolower(preg_replace('/[^a-zA-Z0-9-_]/', "", $searchTerm));
             foreach($tracks as $track) {
-                if (strpos(strtolower($track->title), $cleanedSearchTerm) !== FALSE || strpos(strtolower($track->name), $cleanedSearchTerm) !== FALSE) {
+                if (strpos(strtolower($track->title), $cleanedSearchTerm) !== FALSE || strpos(strtolower($track->artistName), $cleanedSearchTerm) !== FALSE) {
                     array_push($searchResults, $track);
                 }
             }

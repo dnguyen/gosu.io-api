@@ -10,7 +10,7 @@ class Track extends Eloquent {
 
     public static function getAll() {
         $tracks = DB::table('tracks')
-        ->select(array('*','tracks.id AS id'))
+        ->select(array('tracks.id AS trackId', 'tracks.title', 'tracks.videoId', 'tracks.uploaded', 'tracks.viewCount', 'artists.name AS artistName', 'artists.id AS artistId'))
         ->join('artists', 'tracks.artist', '=', 'artists.id')
         ->get();
 
@@ -19,7 +19,7 @@ class Track extends Eloquent {
 
     public static function getTrack($id) {
         $track = DB::table('tracks')
-        ->select(array('tracks.*', 'artists.name', 'tracks.id AS id'))
+        ->select(array('tracks.id AS trackId', 'tracks.title', 'tracks.videoId', 'tracks.uploaded', 'tracks.viewCount', 'artists.name AS artistName', 'artists.id AS artistId'))
         ->join('artists', 'tracks.artist', '=', 'artists.id')
         ->where('tracks.id', '=', $id)
         ->get();
@@ -44,7 +44,7 @@ class Track extends Eloquent {
         }
 
         $tracks = DB::table('tracks')
-        ->select(array('tracks.*', 'artists.name', 'tracks.id AS id', 'tracks.id AS trackId', 'artists.id AS artistId'))
+        ->select(array('tracks.id AS trackId', 'tracks.title', 'tracks.videoId', 'tracks.uploaded', 'tracks.viewCount', 'artists.name AS artistName', 'artists.id AS artistId'))
         ->join('artists', 'tracks.artist', '=', 'artists.id')
         ->where('tracks.published', '=', '1')
         ->orderBy($sortType, $order)->get();
@@ -67,11 +67,11 @@ class Track extends Eloquent {
                 $sorts['order'] = '';
         }
 
-        $start = ($page - 1) * 25;
-        $end = $page * 25 - (($page - 1) * 25);
+        $start = ($page - 1) * 24;
+        $end = $page * 24 - (($page - 1) * 24);
 
         $tracks = DB::table('tracks')
-        ->select(array('tracks.*', 'artists.name', 'tracks.id AS id', 'tracks.id AS trackId', 'artists.id AS artistId'))
+        ->select(array('tracks.id AS trackId', 'tracks.title', 'tracks.videoId', 'tracks.uploaded', 'tracks.viewCount', 'artists.name AS artistName', 'artists.id AS artistId'))
         ->join('artists', 'tracks.artist', '=', 'artists.id')
         ->where('tracks.published', '=', '1')
         ->orderBy($sorts['type'], $sorts['order'])
@@ -89,7 +89,7 @@ class Track extends Eloquent {
 
     public static function getMostViewed($count) {
         $tracks = DB::table('tracks')
-        ->select(array('tracks.*', 'artists.name', 'tracks.id AS id', 'tracks.id AS trackId', 'artists.id AS artistId'))
+        ->select(array('tracks.id AS trackId', 'tracks.title', 'tracks.videoId', 'tracks.uploaded', 'tracks.viewCount', 'artists.name AS artistName', 'artists.id AS artistId'))
         ->join('artists', 'tracks.artist', '=', 'artists.id')
         ->orderBy('viewCount', 'DESC')
         ->take($count)->get();
@@ -99,7 +99,7 @@ class Track extends Eloquent {
 
     public static function getRecentlyUploaded($count) {
         $tracks = DB::table('tracks')
-        ->select(array('tracks.*', 'artists.name', 'tracks.id AS id', 'tracks.id AS trackId', 'artists.id AS artistId'))
+        ->select(array('tracks.id AS trackId', 'tracks.title', 'tracks.videoId', 'tracks.uploaded', 'tracks.viewCount', 'artists.name AS artistName', 'artists.id AS artistId'))
         ->join('artists', 'tracks.artist', '=', 'artists.id')
         ->orderBy('uploaded', 'DESC')
         ->take($count)->get();
