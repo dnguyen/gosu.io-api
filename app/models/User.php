@@ -9,13 +9,24 @@ class User extends Eloquent {
 	protected $table = 'users';
 	public $timestamps = false;
 
-	public static function createNew($username, $password) {
-		$query = DB::table('users')->insert(
+	public static function insert($username, $password) {
+		$userId = DB::table('users')->insertGetId(
 			array(
 				'username' => $username,
 				'password' => Hash::make($password)
 			)
 		);
+
+		$generatedToken = md5(uniqid(mt_rand(), true));
+
+		DB::table('auth_tokens')->insert(
+			array(
+				'userid' => $userId,
+				'token' => $generatedToken
+			)
+		);
+
+		return $generatedToken;
 
 	}
 

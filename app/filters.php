@@ -59,6 +59,11 @@ Route::filter('auth.basic', function()
 	return Auth::basic();
 });
 
+Route::filter('auth.token', function() {
+    // Get userid and token from input parameters (These should be stored in localStorage on the client)
+    // Match the token with the userid in the database, and return that user
+});
+
 /*
 |--------------------------------------------------------------------------
 | Guest Filter

@@ -27,37 +27,30 @@ class UsersController extends BaseController {
      */
     public function store()
     {
-        if (!UserSession::isLoggedIn()) {
-            $username = Input::get('username');
-            $password = Input::get('password');
-            $responseObj = new stdClass();
+        $username = Input::get('username');
+        $password = Input::get('password');
+        $responseObj = new stdClass();
 
-            /*
-                Make sure username only contains alphanumeric characters, underscores, and dashes. And is
-                between 3 and 20 characters long. And the username doesn't already exist.
+        /*
+            Make sure username only contains alphanumeric characters, underscores, and dashes. And is
+            between 3 and 20 characters long. And the username doesn't already exist.
 
-                After inserting new user, log user in.
-            */
-            if (preg_match('/^[a-z0-9_-]{3,20}$/i', $username)) {
-                if (!User::exists($username)) {
-                    User::createNew($username, $password);
+            After inserting new user, log user in.
+        */
+        if (preg_match('/^[a-z0-9_-]{3,20}$/i', $username)) {
+            if (!User::exists($username)) {
+                $token = User::insert($username, $password);
+                $responseObj->token = $token;
 
-                    UserSession::setLogin();
-                    UserSession::setUsername($username);
-
-                    $responseObj->status = true;
-                } else {
-                    $responseObj->status = false;
-                    $responseObj->message = "Username is not available.";
-                }
+                return Response::json($responseObj, 200);
             } else {
-                $responseObj->status = false;
-                $responseObj->message = "Username must be between 3 and 20 characters and can only contain alphanumeric characters, underscores, and dashes.";
+                $responseObj->message = "Username is not available.";
+                return Response::json($responseObj, 400);
             }
-
+        } else {
+            $responseObj->message = "Username must be between 3 and 20 characters and can only contain alphanumeric characters, underscores, and dashes.";
+            return Response::json($responseObj, 400);
         }
-
-        return  Response::json($responseObj);
     }
 
     /**

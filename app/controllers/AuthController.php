@@ -11,40 +11,47 @@ class AuthController extends BaseController {
      *
      * @return Response
      */
-    public function index()
-    {
+    public function index() {
         $username = Input::get('username');
         $password = Input::get('password');
-
         $response = new stdClass();
-        if (User::exists($username)) {
-            $user = User::getByUserName($username);
-            if (Hash::check($password, $user->password)) {
-                $response->status = true;
-                $response->message = "Logged in";
 
-                UserSession::setLogin();
-                UserSession::setUsername($username);
+        if (User::exists($username)) {
+
+            $user = User::getByUserName($username);
+
+            if (Hash::check($password, $user->password)) {
+                $token = '';
+
+                if (AuthToken::exists($user->id)) {
+                    $token = AuthToken::updateToken($user->id);
+                } else {
+                    $token = AuthToken::insert($user->id);
+                }
+
+                $response->token = $token;
+
+                return Response::json($response, 200);
             } else {
-                $response->status = false;
                 $response->message = "The username or password is incorrect.";
+                return Response::json($response, 400);
             }
         } else {
-            $response->status = false;
             $response->message = "The username or password is incorrect.";
+            return Response::json($response, 400);
         }
-
-        return Response::json($response);
     }
 
     public function logout() {
-        UserSession::destroy();
 
         $response = new stdClass();
-        $response->status = true;
-        $response->message = "Logged out";
 
-        return Response::json($response);
+        if (Input::get('token')) {
+            $response->status = AuthToken::remove(Input::get('token'));
+            return Response::json($response, 200);
+        } else {
+            return Response::json($response, 400);
+        }
     }
 
     /**
