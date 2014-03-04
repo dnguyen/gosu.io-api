@@ -31,6 +31,19 @@ class PlaylistsController extends BaseController {
      */
     public function store()
     {
+        $name = Input::get('name');
+        $private = Input::get('private');
+
+        if ($name) {
+            if (strlen($name) > 2 && strlen($name < 30)) {
+                Playlist::insert(array(
+                    'name' => $name,
+                    'private' => $private
+                ));
+            }
+        } else {
+            return 'hi';
+        }
     }
 
     /**
@@ -42,6 +55,7 @@ class PlaylistsController extends BaseController {
     public function show($id)
     {
         $response = array();
+
         $response['playlist'] = Playlist::getById($id);
         $response['tracks'] = Playlist::getTracks($id);
         return Response::json($response);

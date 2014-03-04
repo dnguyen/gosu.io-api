@@ -1,5 +1,9 @@
 <?php
 
+/*
+    Entire authentication method needs to be refactored. REST APIs should be
+    stateless. Use some kind of token instead of sessions.
+*/
 class AuthController extends BaseController {
 
     /**

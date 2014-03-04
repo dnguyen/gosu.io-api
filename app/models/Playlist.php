@@ -11,7 +11,7 @@ class Playlist extends Eloquent {
     }
 
     public static function getById($id) {
-        $playlist = DB::table('playlists')->select('*')->where('uniqueid', '=', $id)->get();
+        $playlist = DB::table('playlists')->select('*')->where('id', '=', $id)->get();
 
         return $playlist[0];
     }
@@ -20,8 +20,8 @@ class Playlist extends Eloquent {
         $playlist = DB::table('playlists')
         ->select(
             array(
-                'playlists.uniqueid',
-                'playlist_tracks.playlistTrackId',
+                'playlists.id',
+                'playlist_tracks.id',
                 'playlist_tracks.playlistid',
                 'playlist_tracks.trackid',
                 'playlist_tracks.order',
@@ -32,12 +32,23 @@ class Playlist extends Eloquent {
                 'artists.name'
             )
         )
-        ->join('playlist_tracks', 'playlists.uniqueid', '=', 'playlist_tracks.playlistid')
+        ->join('playlist_tracks', 'playlists.id', '=', 'playlist_tracks.playlistid')
         ->join('tracks', 'playlist_tracks.trackid', '=', 'tracks.id')
         ->join('artists', 'tracks.artist', '=', 'artists.id')
-        ->where('playlists.uniqueid', '=', $id)
+        ->where('playlists.id', '=', $id)
         ->orderBy('playlist_tracks.order', 'desc')->get();
 
         return $playlist;
+    }
+
+    public static function insert($data) {
+        DB::table('playlists')
+        ->insert(
+            array(
+                'id' => hash('crc32b', uniqid()),
+                'name' => $data['name'],
+                'public' => $data['private'] == 0 ? 1 : 0
+            )
+        );
     }
 }
