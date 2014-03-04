@@ -26,6 +26,22 @@ class AuthToken extends Eloquent {
         }
     }
 
+    // Authorizes a token. Returns userid, username, and token
+    public static function auth($token) {
+        $user = DB::table('auth_tokens')
+        ->select(
+            array(
+                'users.id',
+                'users.username',
+                'auth_tokens.token'
+            )
+        )
+        ->join('users', 'users.id', '=', 'auth_tokens.userid')
+        ->where('auth_tokens.token', '=', $token)->get();
+
+        return $user[0];
+    }
+
     public static function updateToken($userid) {
         $generatedToken = md5(uniqid(mt_rand(), true));
         DB::table('auth_tokens')->where('userid', '=', $userid)->update(array('token' => $generatedToken));

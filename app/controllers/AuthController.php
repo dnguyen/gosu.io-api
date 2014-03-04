@@ -6,11 +6,7 @@
 */
 class AuthController extends BaseController {
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
+    // Login request
     public function index() {
         $username = Input::get('username');
         $password = Input::get('password');
@@ -47,11 +43,23 @@ class AuthController extends BaseController {
         $response = new stdClass();
 
         if (Input::get('token')) {
-            $response->status = AuthToken::remove(Input::get('token'));
-            return Response::json($response, 200);
+            AuthToken::remove(Input::get('token'));
+            return Response::json($response, 204);
         } else {
             return Response::json($response, 400);
         }
+    }
+
+    public function AuthToken() {
+        $token = Input::get('token');
+        $authed = AuthToken::auth($token);
+
+        if ($authed) {
+            return Response::json($authed, 200);
+        } else {
+            return Response::json($authed, 401);
+        }
+
     }
 
     /**
@@ -69,8 +77,7 @@ class AuthController extends BaseController {
      *
      * @return Response
      */
-    public function store()
-    {
+    public function store() {
 
     }
 
