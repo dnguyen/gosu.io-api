@@ -30,6 +30,10 @@ Route::resource('session', 'SessionController');
 Route::resource('auth', 'AuthController');
 Route::delete('auth', array('uses' => 'AuthController@logout'));
 
+// User data for an authenticated user
+//Route::resource('user', 'UserController');
+Route::get('user/playlists', array('uses' => 'UserController@getPlaylists'));
+
 Route::resource('users', 'UsersController');
 
 Route::resource('playlists', 'PlaylistsController');

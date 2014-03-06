@@ -1,11 +1,6 @@
 <?php
 
-/*
-    Entire authentication method needs to be refactored. REST APIs should be
-    stateless. Use some kind of token instead of sessions.
-*/
 class AuthController extends BaseController {
-
 
     public function index() {
 
@@ -17,7 +12,7 @@ class AuthController extends BaseController {
 
         $authed = AuthToken::auth($token);
 
-        if ($authed) {
+        if (!is_null($authed)) {
             return Response::json($authed, 200);
         } else {
             return Response::json($authed, 404);
@@ -35,10 +30,6 @@ class AuthController extends BaseController {
         }
     }
 
-    public function AuthToken() {
-
-    }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -46,7 +37,7 @@ class AuthController extends BaseController {
      */
     public function create()
     {
-        return 'post';
+
     }
 
     /**

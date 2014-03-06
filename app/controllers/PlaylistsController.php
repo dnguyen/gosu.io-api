@@ -36,13 +36,20 @@ class PlaylistsController extends BaseController {
 
         if ($name) {
             if (strlen($name) > 2 && strlen($name < 30)) {
-                Playlist::insert(array(
+                $playlistId = Playlist::insert(array(
+                    'token' => Input::get('token'),
                     'name' => $name,
                     'private' => $private
                 ));
+                $responseObj = new stdClass();
+
+                $responseObj->id = $playlistId;
+                $responseObj->name = $name;
+
+                return Response::json($responseObj, 200);
             }
         } else {
-            return 'hi';
+            return Response::json(array(), 400);
         }
     }
 

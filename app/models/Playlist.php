@@ -42,13 +42,30 @@ class Playlist extends Eloquent {
     }
 
     public static function insert($data) {
+
+        $playlistid = hash('crc32b', uniqid());
+
+        $user = AuthToken::auth($data['token']);
+
         DB::table('playlists')
         ->insert(
             array(
-                'id' => hash('crc32b', uniqid()),
+                'id' => $playlistid,
                 'name' => $data['name'],
-                'public' => $data['private'] == 0 ? 1 : 0
+                'userid' => $user->id,
+                'public' => $data['private'] == 0 ? 1 : 0,
+                'createdon' => date("Y-m-d H:i:s")
             )
         );
+
+        return $playlistid;
+    }
+
+    // Gets all playlists for a user, since we're getting both public
+    // and private playlists, require a token.
+    public static function getAllForUser($userid) {
+        //$user = AuthToken::auth($token);
+
+        return DB::table('playlists')->select('*')->where('userid', '=', $userid)->get();
     }
 }

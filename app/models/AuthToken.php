@@ -39,7 +39,11 @@ class AuthToken extends Eloquent {
         ->join('users', 'users.id', '=', 'auth_tokens.userid')
         ->where('auth_tokens.token', '=', $token)->get();
 
-        return $user[0];
+        if (count($user) > 0) {
+            return $user[0];
+        } else {
+            return NULL;
+        }
     }
 
     public static function updateToken($userid) {
