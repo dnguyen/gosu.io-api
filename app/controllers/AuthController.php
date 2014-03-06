@@ -6,8 +6,55 @@
 */
 class AuthController extends BaseController {
 
-    // Login request
+
     public function index() {
+
+        $token = Input::get('token');
+
+        if (!$token) {
+            return Response::json(array(), 404);
+        }
+
+        $authed = AuthToken::auth($token);
+
+        if ($authed) {
+            return Response::json($authed, 200);
+        } else {
+            return Response::json($authed, 404);
+        }
+    }
+
+    public function logout() {
+        $response = new stdClass();
+
+        if (Input::get('token')) {
+            AuthToken::remove(Input::get('token'));
+            return Response::json($response, 204);
+        } else {
+            return Response::json($response, 400);
+        }
+    }
+
+    public function AuthToken() {
+
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        return 'post';
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return Response
+     */
+    public function store() {
         $username = Input::get('username');
         $password = Input::get('password');
         $response = new stdClass();
@@ -38,57 +85,13 @@ class AuthController extends BaseController {
         }
     }
 
-    public function logout() {
-
-        $response = new stdClass();
-
-        if (Input::get('token')) {
-            AuthToken::remove(Input::get('token'));
-            return Response::json($response, 204);
-        } else {
-            return Response::json($response, 400);
-        }
-    }
-
-    public function AuthToken() {
-        $token = Input::get('token');
-        $authed = AuthToken::auth($token);
-
-        if ($authed) {
-            return Response::json($authed, 200);
-        } else {
-            return Response::json($authed, 401);
-        }
-
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @return Response
-     */
-    public function store() {
-
-    }
-
     /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return Response
      */
-    public function show($id)
-    {
+    public function show($id) {
     }
 
     /**
@@ -97,9 +100,8 @@ class AuthController extends BaseController {
      * @param  int  $id
      * @return Response
      */
-    public function edit($id)
-    {
-        //
+    public function edit($id) {
+        return 'edit';
     }
 
     /**
@@ -108,8 +110,7 @@ class AuthController extends BaseController {
      * @param  int  $id
      * @return Response
      */
-    public function update($id)
-    {
+    public function update($id) {
         //
     }
 
@@ -119,8 +120,8 @@ class AuthController extends BaseController {
      * @param  int  $id
      * @return Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id) {
+
     }
 
 }
