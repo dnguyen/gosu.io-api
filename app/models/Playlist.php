@@ -4,18 +4,32 @@ class Playlist extends Eloquent {
     protected $table = 'playlists';
     public $timestamps = false;
 
+    /**
+     * Gets all playlists from the database
+     * @return array
+     */
     public static function getAll() {
         $playlists = DB::table('playlists')->select('*')->get();
 
         return $playlists;
     }
 
+    /**
+     * Gets a playlist by id
+     * @param  string $id
+     * @return object
+     */
     public static function getById($id) {
         $playlist = DB::table('playlists')->select('*')->where('id', '=', $id)->get();
 
         return $playlist[0];
     }
 
+    /**
+     * Gets tracks for a playlist
+     * @param  string $id
+     * @return array
+     */
     public static function getTracks($id) {
         $playlist = DB::table('playlists')
         ->select(
@@ -41,6 +55,11 @@ class Playlist extends Eloquent {
         return $playlist;
     }
 
+    /**
+     * Inserts a new playlist to the database.
+     * @param  array $data
+     * @return string
+     */
     public static function insert($data) {
 
         $playlistid = hash('crc32b', uniqid());
@@ -61,11 +80,12 @@ class Playlist extends Eloquent {
         return $playlistid;
     }
 
-    // Gets all playlists for a user, since we're getting both public
-    // and private playlists, require a token.
+    /**
+     * Gets playlists for a user
+     * @param  string $userid
+     * @return array
+     */
     public static function getAllForUser($userid) {
-        //$user = AuthToken::auth($token);
-
         return DB::table('playlists')->select('*')->where('userid', '=', $userid)->get();
     }
 }

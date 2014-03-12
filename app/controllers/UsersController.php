@@ -32,28 +32,22 @@ class UsersController extends BaseController {
         $email = Input::get('email');
         $responseObj = new stdClass();
 
-        /*
-            Make sure username only contains alphanumeric characters, underscores, and dashes. And is
-            between 3 and 20 characters long. And the username doesn't already exist.
+        if (!User::exists($username)) {
+            $token = User::insert(array(
+                'username' => $username,
+                'password' => $password,
+                'email' => $email
+            ));
 
-            After inserting new user, log user in.
-        */
-        if (preg_match('/^[a-z0-9_-]{3,20}$/i', $username)) {
-            if (!User::exists($username)) {
-                $token = User::insert(array(
-                    'username' => $username,
-                    'password' => $password,
-                    'email' => $email
-                ));
+            if (!is_null($token)) {
                 $responseObj->token = $token;
 
                 return Response::json($responseObj, 200);
             } else {
-                $responseObj->message = "Username is not available.";
-                return Response::json($responseObj, 400);
+                return Response::json(NULL, 400);
             }
         } else {
-            $responseObj->message = "Username must be between 3 and 20 characters and can only contain alphanumeric characters, underscores, and dashes.";
+            $responseObj->message = "Username is not available.";
             return Response::json($responseObj, 400);
         }
     }

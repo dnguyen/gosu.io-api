@@ -11,6 +11,9 @@
 |
 */
 
+// TODO:
+//      Remove ::resource routes, and just create routes manually because
+//      we don't need all the routes the resource provides.
 Route::get('/', function() {
     App::abort(404, 'Page not found');
 });

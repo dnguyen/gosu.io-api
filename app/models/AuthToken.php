@@ -3,6 +3,11 @@ class AuthToken extends Eloquent {
     protected $table = 'auth_tokens';
     public $timestamps = false;
 
+    /**
+     * Insert a new authentication token for a user
+     * @param  string $userid
+     * @return string
+     */
     public static function insert($userid) {
         $generatedToken = md5(uniqid(mt_rand(), true));
 
@@ -16,7 +21,11 @@ class AuthToken extends Eloquent {
         return $generatedToken;
     }
 
-    // Checks if a user already has a token in the database
+    /**
+     * Checks if a user already has an authentication token in the database.
+     * @param  string $userid
+     * @return bool
+     */
     public static function exists($userid) {
         $query = DB::table('auth_tokens')->select('userid')->where('userid', '=', $userid);
         if ($query->count() > 0) {
@@ -26,7 +35,11 @@ class AuthToken extends Eloquent {
         }
     }
 
-    // Authorizes a token. Returns userid, username, and token
+    /**
+     * Authorizes a token. If the token exists, then the user is authorized.
+     * @param  string $token
+     * @return user|null
+     */
     public static function auth($token) {
         $user = DB::table('auth_tokens')
         ->select(
@@ -46,6 +59,11 @@ class AuthToken extends Eloquent {
         }
     }
 
+    /**
+     * Regenerates a user's authentication token.
+     * @param   $userid
+     * @return string
+     */
     public static function updateToken($userid) {
         $generatedToken = md5(uniqid(mt_rand(), true));
         DB::table('auth_tokens')->where('userid', '=', $userid)->update(array('token' => $generatedToken));
@@ -53,6 +71,11 @@ class AuthToken extends Eloquent {
         return $generatedToken;
     }
 
+    /**
+     * Deletes an authentication token from the database
+     * @param  string $token
+     * @return
+     */
     public static function remove($token) {
         return DB::table('auth_tokens')->where('token', '=', $token)->delete();
     }
