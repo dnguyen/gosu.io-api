@@ -9,11 +9,12 @@ class User extends Eloquent {
     protected $table = 'users';
     public $timestamps = false;
 
-    public static function insert($username, $password) {
+    public static function insert($data) {
         $userId = DB::table('users')->insertGetId(
             array(
-                'username' => $username,
-                'password' => Hash::make($password)
+                'username' => $data['username'],
+                'password' => Hash::make($data['password']),
+                'email' => $data['email']
             )
         );
 

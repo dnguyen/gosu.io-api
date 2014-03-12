@@ -11,11 +11,10 @@
 |
 */
 
-Route::get('/', function()
-{
-	//return View::make('hello');
+Route::get('/', function() {
     App::abort(404, 'Page not found');
 });
+
 Route::resource('tracks', 'TracksController');
 Route::get('tracks/search/{terms}', array('as' => 'tracks.search' , 'uses' => 'TracksController@search'));
 

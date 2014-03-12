@@ -29,6 +29,7 @@ class UsersController extends BaseController {
     {
         $username = Input::get('username');
         $password = Input::get('password');
+        $email = Input::get('email');
         $responseObj = new stdClass();
 
         /*
@@ -39,7 +40,11 @@ class UsersController extends BaseController {
         */
         if (preg_match('/^[a-z0-9_-]{3,20}$/i', $username)) {
             if (!User::exists($username)) {
-                $token = User::insert($username, $password);
+                $token = User::insert(array(
+                    'username' => $username,
+                    'password' => $password,
+                    'email' => $email
+                ));
                 $responseObj->token = $token;
 
                 return Response::json($responseObj, 200);
