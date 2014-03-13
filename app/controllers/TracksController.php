@@ -1,6 +1,17 @@
 <?php
 
+use Gosu\Repositories\MySQLTracksRepository;
+
 class TracksController extends BaseController {
+
+    protected $tracks;
+
+    // Inject the MySQLTracksRepository. We use a repository instead of just using the
+    // model because the Controller shouldn't depend on the Eloquent model. We might
+    // want to support more than just MySQL later on, so we use a TracksRepository interface.
+    public function __construct(MySQLTracksRepository $tracks) {
+        $this->tracks = $tracks;
+    }
 
 	/**
 	 * Display a listing of the resource.
@@ -19,12 +30,12 @@ class TracksController extends BaseController {
 
         if (Input::has('page')) {
             $response = array();
-            $response['tracks'] = Track::getTracksForPage(Input::get('page'), $sortSettings);
-            $response['pageCount'] = Track::getTracksTotalPageCount();
+            $response['tracks'] = $this->tracks->forPage(Input::get('page'), $sortSettings);
+            $response['pageCount'] = $this->tracks->pageCount();
 
             return Response::json($response);
         } else {
-            return Response::json(Track::getAllSorted($sortType, $order));
+            return Response::json($this->tracks->allSorted($sortType, $order));
         }
 	}
 
@@ -56,7 +67,7 @@ class TracksController extends BaseController {
 	 */
 	public function show($id)
 	{
-		return Response::json(Track::getTrack($id)[0]);
+		return Response::json($this->tracks->find($id)[0]);
 	}
 
 	/**
@@ -97,7 +108,7 @@ class TracksController extends BaseController {
         $sortType = Input::get('sort', 'uploaded');
         $order = Input::get('order', 'desc');
 
-        $tracks = Track::getAllSorted($sortType, $order);
+        $tracks = $this->tracks->allSorted($sortType, $order);
 
         $searchResults = array();
         $searchArray = explode("+", preg_replace('/\s/', "+", $searchTerms));
@@ -112,6 +123,8 @@ class TracksController extends BaseController {
         }
         $response = array();
         $response["tracks"] = $searchResults;
+        $response["count" ] = count($searchResults);
+
         return Response::json($response);
     }
 

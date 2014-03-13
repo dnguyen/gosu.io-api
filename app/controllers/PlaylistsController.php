@@ -9,9 +9,7 @@ class PlaylistsController extends BaseController {
      */
     public function index()
     {
-        $responseObj = array();
-        $responseObj['playlists'] = Playlist::getAll();
-        return Response::json($responseObj);
+        return Response::json(Playlist::all(), 200);
     }
 
     /**

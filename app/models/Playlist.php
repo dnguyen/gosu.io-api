@@ -9,9 +9,11 @@ class Playlist extends Eloquent {
      * @return array
      */
     public static function getAll() {
-        $playlists = DB::table('playlists')->select('*')->get();
+        //$playlists = DB::table('playlists')->select('*')->get();
 
-        return $playlists;
+        //return $playlists;
+        //return Playlist::all();
+        return Playlist::all();
     }
 
     /**

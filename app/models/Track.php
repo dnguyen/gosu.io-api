@@ -9,12 +9,14 @@ class Track extends Eloquent {
     }
 
     public static function getAll() {
-        $tracks = DB::table('tracks')
+        /*$tracks = DB::table('tracks')
         ->select(array('tracks.id AS trackId', 'tracks.title', 'tracks.videoId', 'tracks.uploaded', 'tracks.viewCount', 'artists.name AS artistName', 'artists.id AS artistId'))
         ->join('artists', 'tracks.artist', '=', 'artists.id')
         ->get();
 
-        return $tracks;
+        return $tracks;*/
+        return Track::all();
+
     }
 
     public static function getTrack($id) {
