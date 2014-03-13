@@ -17,6 +17,7 @@ App::before(function($request)
         $statusCode = 204;
         $headers = [
             'Access-Control-Allow-Origin'      => 'http://dev.gosukpop.com',
+            'Access-Control-Allow-Origin'      => 'http://yourkpop.dev',
             'Access-Control-Allow-Methods'     => 'GET, POST, PUT, DELETE, OPTIONS',
             'Access-Control-Allow-Headers'     => 'origin, content-type, accept, authorization, x-requested-with, enctype, Content-Disposition',
             'Access-Control-Allow-Credentials' => 'true',
@@ -30,6 +31,7 @@ App::before(function($request)
 App::after(function($request, $response)
 {
     $response->headers->set('Access-Control-Allow-Origin', 'http://dev.gosukpop.com');
+    $response->headers->set('Access-Control-Allow-Origin', 'http://yourkpop.dev');
     $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     $response->headers->set('Access-Control-Allow-Headers', 'origin, content-type, accept, authorization, x-requested-with, enctype, Content-Disposition');
     $response->headers->set('Access-Control-Allow-Credentials', 'true');

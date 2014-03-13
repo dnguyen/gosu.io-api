@@ -55,9 +55,9 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'gosukpopv3',
+			'database'  => 'gosukpop',
 			'username'  => 'root',
-			'password'  => '',
+			'password'  => 'G7P913F22Sp87JN',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_general_ci',
 			'prefix'    => '',
