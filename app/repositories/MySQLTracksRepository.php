@@ -29,4 +29,8 @@ class MySQLTracksRepository implements TracksRepositoryInterface {
     public function pageCount() {
         return $this->track->getTracksTotalPageCount();
     }
+
+    public function filter($filterOptions) {
+        return $this->track->filter($filterOptions);
+    }
 }

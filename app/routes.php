@@ -18,11 +18,11 @@ Route::get('/', function() {
     App::abort(404, 'Page not found');
 });
 
-Route::resource('tracks', 'TracksController');
-Route::get('tracks/search/{terms}', array('as' => 'tracks.search' , 'uses' => 'TracksController@search'));
+Route::get('tracks/search/{terms}', 'TracksController@search');
+Route::get('tracks/filter', 'TracksController@filter');
+Route::get('tracks/{id}', 'TracksController@show');
+Route::get('tracks', 'TracksController@index');
 
-Route::get('NewTrackReleases', 'MetaTracksController@recentlyUploaded');
-Route::get('MostViewedTracks', 'MetaTracksController@mostViewed');
 Route::get('ComingSoonTracks', 'MetaTracksController@comingSoon');
 
 Route::resource('artists', 'ArtistsController');

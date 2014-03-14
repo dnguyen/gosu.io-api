@@ -9,14 +9,7 @@ class Track extends Eloquent {
     }
 
     public static function getAll() {
-        /*$tracks = DB::table('tracks')
-        ->select(array('tracks.id AS trackId', 'tracks.title', 'tracks.videoId', 'tracks.uploaded', 'tracks.viewCount', 'artists.name AS artistName', 'artists.id AS artistId'))
-        ->join('artists', 'tracks.artist', '=', 'artists.id')
-        ->get();
-
-        return $tracks;*/
         return Track::all();
-
     }
 
     public static function getTrack($id) {
@@ -91,7 +84,14 @@ class Track extends Eloquent {
 
     public static function getMostViewed($count) {
         $tracks = DB::table('tracks')
-        ->select(array('tracks.id AS trackId', 'tracks.title', 'tracks.videoId', 'tracks.uploaded', 'tracks.viewCount', 'artists.name AS artistName', 'artists.id AS artistId'))
+        ->select(array(
+                'tracks.id AS trackId',
+                'tracks.title',
+                'tracks.videoId',
+                'tracks.uploaded',
+                'tracks.viewCount',
+                'artists.name AS artistName',
+                'artists.id AS artistId'))
         ->join('artists', 'tracks.artist', '=', 'artists.id')
         ->orderBy('viewCount', 'DESC')
         ->take($count)->get();
@@ -101,10 +101,46 @@ class Track extends Eloquent {
 
     public static function getRecentlyUploaded($count) {
         $tracks = DB::table('tracks')
-        ->select(array('tracks.id AS trackId', 'tracks.title', 'tracks.videoId', 'tracks.uploaded', 'tracks.viewCount', 'artists.name AS artistName', 'artists.id AS artistId'))
+        ->select(array(
+                'tracks.id AS trackId',
+                'tracks.title',
+                'tracks.videoId',
+                'tracks.uploaded',
+                'tracks.viewCount',
+                'artists.name AS artistName',
+                'artists.id AS artistId'))
         ->join('artists', 'tracks.artist', '=', 'artists.id')
         ->orderBy('uploaded', 'DESC')
         ->take($count)->get();
+
+        return $tracks;
+    }
+
+    public static function filter($filterOptions) {
+        if (!isset($filterOptions['sort'])) {
+            $filterOptions['sort'] = 'uploaded';
+        }
+
+        if (!isset($filterOptions['order'])) {
+            $filterOptions['order'] = 'DESC';
+        }
+
+        if (!isset($filterOptions['count'])) {
+            $filterOptions['count'] = 25;
+        }
+
+        $tracks = DB::table('tracks')
+            ->select(array(
+                'tracks.id AS trackId',
+                'tracks.title',
+                'tracks.videoId',
+                'tracks.uploaded',
+                'tracks.viewCount',
+                'artists.name AS artistName',
+                'artists.id AS artistId'))
+            ->join('artists', 'tracks.artist', '=', 'artists.id')
+            ->orderBy($filterOptions['sort'], $filterOptions['order'])
+            ->take($filterOptions['count'])->get();
 
         return $tracks;
     }
@@ -121,4 +157,5 @@ class Track extends Eloquent {
 
         return $tracks;
     }
+
 }

@@ -7,4 +7,5 @@ interface TracksRepositoryInterface {
     public function find($id);
     public function forPage($page, $settings);
     public function pageCount();
+    public function filter($filterOptions);
 }

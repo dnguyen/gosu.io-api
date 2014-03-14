@@ -18,9 +18,7 @@ class TracksController extends BaseController {
 	 *
 	 * @return Response
 	 */
-	public function index()
-	{
-
+	public function index() {
         $sortType = Input::get('sort', 'uploaded');
         $order = Input::get('order', 'desc');
         $sortSettings = array(
@@ -39,25 +37,12 @@ class TracksController extends BaseController {
         }
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		//
-	}
+    /**
+     * Shows a filtered list of tracks
+     */
+    public function filter() {
+        return Response::json($this->tracks->filter(Input::all()), 200);
+    }
 
 	/**
 	 * Display the specified resource.
@@ -65,42 +50,8 @@ class TracksController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($id)
-	{
+	public function show($id) {
 		return Response::json($this->tracks->find($id)[0]);
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
 	}
 
     public function search($searchTerms) {
