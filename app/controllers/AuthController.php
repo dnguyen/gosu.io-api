@@ -1,6 +1,14 @@
 <?php
 
+use Gosu\Repositories\MySQLAuthRepository;
+
 class AuthController extends BaseController {
+
+    protected $AuthRepository;
+
+    public function __construct(MySQLAuthRepository $authRepository) {
+        $this->AuthRepository = $authRepository;
+    }
 
     public function index() {
 
@@ -10,7 +18,7 @@ class AuthController extends BaseController {
             return Response::json(array(), 404);
         }
 
-        $authed = AuthToken::auth($token);
+        $authed = $this->AuthRepository->find($token);
 
         if (!is_null($authed)) {
             return Response::json($authed, 200);
@@ -23,7 +31,7 @@ class AuthController extends BaseController {
         $response = new stdClass();
 
         if (Input::get('token')) {
-            AuthToken::remove(Input::get('token'));
+            $this->AuthRepository->remove(Input::get('token'));
             return Response::json($response, 204);
         } else {
             return Response::json($response, 400);
@@ -57,10 +65,10 @@ class AuthController extends BaseController {
             if (Hash::check($password, $user->password)) {
                 $token = '';
 
-                if (AuthToken::exists($user->id)) {
-                    $token = AuthToken::updateToken($user->id);
+                if ($this->AuthRepository->exists($user->id)) {
+                    $token = $this->AuthRepository->update($user->id);
                 } else {
-                    $token = AuthToken::insert($user->id);
+                    $token = $this->AuthRepository->create($user->id);
                 }
 
                 $response->token = $token;
