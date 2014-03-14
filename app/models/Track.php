@@ -14,12 +14,16 @@ class Track extends Eloquent {
 
     public static function getTrack($id) {
         $track = DB::table('tracks')
-        ->select(array('tracks.id AS trackId', 'tracks.title', 'tracks.videoId', 'tracks.uploaded', 'tracks.viewCount', 'artists.name AS artistName', 'artists.id AS artistId'))
-        ->join('artists', 'tracks.artist', '=', 'artists.id')
-        ->where('tracks.id', '=', $id)
-        ->get();
+            ->select(array('tracks.id AS trackId', 'tracks.title', 'tracks.videoId', 'tracks.uploaded', 'tracks.viewCount', 'artists.name AS artistName', 'artists.id AS artistId'))
+            ->join('artists', 'tracks.artist', '=', 'artists.id')
+            ->where('tracks.id', '=', $id)
+            ->get();
 
-        return $track;
+        if (count($track) > 0) {
+            return $track;
+        } else {
+            return NULL;
+        }
     }
 
     // Gets all tracks given a sort and order

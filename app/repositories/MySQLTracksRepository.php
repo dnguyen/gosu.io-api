@@ -19,7 +19,7 @@ class MySQLTracksRepository implements TracksRepositoryInterface {
     }
 
     public function find($id) {
-        return $this->track->getTrack($id);
+        return $this->track->getTrack($id)[0];
     }
 
     public function forPage($page, $settings) {

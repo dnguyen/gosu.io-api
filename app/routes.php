@@ -23,6 +23,8 @@ Route::get('tracks/filter', 'TracksController@filter');
 Route::get('tracks/{id}', 'TracksController@show');
 Route::get('tracks', 'TracksController@index');
 
+Route::post('votes', 'VotesController@insert');
+
 Route::get('ComingSoonTracks', 'MetaTracksController@comingSoon');
 
 Route::resource('artists', 'ArtistsController');

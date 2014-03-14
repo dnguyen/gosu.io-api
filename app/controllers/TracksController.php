@@ -51,7 +51,27 @@ class TracksController extends BaseController {
 	 * @return Response
 	 */
 	public function show($id) {
-		return Response::json($this->tracks->find($id)[0]);
+        $track = $this->tracks->find($id);
+
+        // Make sure a track with that id actually exists
+        if (!is_null($track)) {
+            // If a token is given, check if user is authenticated and if they have voted for this track
+            if (Input::has('token')) {
+                $user = AuthToken::auth(Input::get('token'));
+                $vote = Vote::get($user->id, $track->trackId);
+
+                // If vote doesn't exist, default to 0 (no vote yet)
+                if (is_null($vote)) {
+                    $track->liked = 0;
+                } else {
+                    $track->liked = $vote->liked;
+                }
+            }
+
+            return Response::json($track, 200);
+        } else {
+            return Response::json(NULL, 400);
+        }
 	}
 
     public function search($searchTerms) {
