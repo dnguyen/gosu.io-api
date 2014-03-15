@@ -3,6 +3,7 @@
 class VotesController extends BaseController {
     public function insert() {
         $token = Input::get('token');
+        $liked = Input::get('liked');
         $user = AuthToken::auth($token);
         $vote = Vote::get($user->id, Input::get('trackid'));
 
@@ -18,23 +19,21 @@ class VotesController extends BaseController {
                 ));
 
             } else {
-                // Delete the vote from the database if user is removing their vote.
+                // Delete the vote from the database if user voting for the same thing.
                 // note: probably doesn't scale very well...will probably just want to add votes with liked = 0
                 //       to some kind of queue that will be cleared every once in awhile.
-                if (Input::get('liked') == 0) {
+                if ($liked == $vote->liked) {
                     Vote::remove(array(
                         'userid' => $user->id,
                         'trackid' => Input::get('trackid')
                     ));
                 } else {
                     // Only update the vote if the vote has changed.
-                    if ($vote->liked != Input::get('liked')) {
-                        Vote::updateLiked(array(
-                            'userid' => $user->id,
-                            'trackid' => Input::get('trackid'),
-                            'liked' => Input::get('liked')
-                        ));
-                    }
+                    Vote::updateLiked(array(
+                        'userid' => $user->id,
+                        'trackid' => Input::get('trackid'),
+                        'liked' => Input::get('liked')
+                    ));
                 }
             }
 

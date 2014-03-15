@@ -8,4 +8,5 @@ interface TracksRepositoryInterface {
     public function forPage($page, $settings);
     public function pageCount();
     public function filter($filterOptions);
+    public function getStats($trackid);
 }

@@ -33,4 +33,8 @@ class MySQLTracksRepository implements TracksRepositoryInterface {
     public function filter($filterOptions) {
         return $this->track->filter($filterOptions);
     }
+
+    public function getStats($trackid) {
+        return $this->track->getStats($trackid);
+    }
 }

@@ -52,6 +52,7 @@ class TracksController extends BaseController {
 	 */
 	public function show($id) {
         $track = $this->tracks->find($id);
+        $track->stats = $this->tracks->getStats($id);
 
         // Make sure a track with that id actually exists
         if (!is_null($track)) {

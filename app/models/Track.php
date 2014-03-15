@@ -162,4 +162,17 @@ class Track extends Eloquent {
         return $tracks;
     }
 
+    public static function getStats($trackid) {
+        $stats = DB::select('SELECT SUM(if(liked=1,1,0)) as likes, SUM(if(liked=-1,1,0)) as dislikes FROM votes WHERE trackid = ?', array($trackid));
+
+        if ($stats[0]->likes == null) {
+            $stats[0]->likes = 0;
+        }
+        if ($stats[0]->dislikes == null) {
+            $stats[0]->dislikes = 0;
+        }
+
+        return $stats[0];
+    }
+
 }
