@@ -14,9 +14,17 @@ class Track extends Eloquent {
 
     public static function getTrack($id) {
         $track = DB::table('tracks')
-            ->select(array('tracks.id AS trackId', 'tracks.title', 'tracks.videoId', 'tracks.uploaded', 'tracks.viewCount', 'artists.name AS artistName', 'artists.id AS artistId'))
+            ->select(array(
+                'tracks.id AS trackId',
+                'tracks.title',
+                'tracks.videoId',
+                'tracks.uploaded',
+                'tracks.viewCount',
+                'artists.name AS artistName',
+                'artists.id AS artistId'))
             ->join('artists', 'tracks.artist', '=', 'artists.id')
             ->where('tracks.id', '=', $id)
+            ->remember(10)
             ->get();
 
         if (count($track) > 0) {
@@ -43,10 +51,10 @@ class Track extends Eloquent {
         }
 
         $tracks = DB::table('tracks')
-        ->select(array('tracks.id AS trackId', 'tracks.title', 'tracks.videoId', 'tracks.uploaded', 'tracks.viewCount', 'artists.name AS artistName', 'artists.id AS artistId'))
-        ->join('artists', 'tracks.artist', '=', 'artists.id')
-        ->where('tracks.published', '=', '1')
-        ->orderBy($sortType, $order)->get();
+            ->select(array('tracks.id AS trackId', 'tracks.title', 'tracks.videoId', 'tracks.uploaded', 'tracks.viewCount', 'artists.name AS artistName', 'artists.id AS artistId'))
+            ->join('artists', 'tracks.artist', '=', 'artists.id')
+            ->where('tracks.published', '=', '1')
+            ->orderBy($sortType, $order)->get();
 
         return $tracks;
     }
@@ -70,11 +78,20 @@ class Track extends Eloquent {
         $end = $page * 24 - (($page - 1) * 24);
 
         $tracks = DB::table('tracks')
-        ->select(array('tracks.id AS trackId', 'tracks.title', 'tracks.videoId', 'tracks.uploaded', 'tracks.viewCount', 'artists.name AS artistName', 'artists.id AS artistId'))
-        ->join('artists', 'tracks.artist', '=', 'artists.id')
-        ->where('tracks.published', '=', '1')
-        ->orderBy($sorts['type'], $sorts['order'])
-        ->skip($start)->take($end)->get();
+            ->select(array(
+                'tracks.id AS trackId',
+                'tracks.title',
+                'tracks.videoId',
+                'tracks.uploaded',
+                'tracks.viewCount',
+                'artists.name AS artistName',
+                'artists.id AS artistId'))
+            ->join('artists', 'tracks.artist', '=', 'artists.id')
+            ->where('tracks.published', '=', '1')
+            ->orderBy($sorts['type'], $sorts['order'])
+            ->skip($start)->take($end)
+            ->remember(10)
+            ->get();
 
         return $tracks;
 

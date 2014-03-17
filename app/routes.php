@@ -20,12 +20,11 @@ Route::get('/', function() {
 
 Route::get('tracks/search/{terms}', 'TracksController@search');
 Route::get('tracks/filter', 'TracksController@filter');
+Route::get('tracks/comingsoon', 'TracksController@comingSoon');
 Route::get('tracks/{id}', 'TracksController@show');
 Route::get('tracks', 'TracksController@index');
 
 Route::post('votes', 'VotesController@insert');
-
-Route::get('ComingSoonTracks', 'MetaTracksController@comingSoon');
 
 Route::resource('artists', 'ArtistsController');
 Route::get('artists/search/{terms}','ArtistsController@search');

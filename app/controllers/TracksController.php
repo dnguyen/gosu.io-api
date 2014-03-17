@@ -7,14 +7,16 @@ class TracksController extends BaseController {
     protected $tracks;
 
     // Inject the MySQLTracksRepository. We use a repository instead of just using the
-    // model because the Controller shouldn't depend on the Eloquent model. We might
+    // model because the Controller shouldn't depend on the Eloquent model. Also, We might
     // want to support more than just MySQL later on, so we use a TracksRepository interface.
     public function __construct(MySQLTracksRepository $tracks) {
         $this->tracks = $tracks;
     }
 
 	/**
-	 * Display a listing of the resource.
+	 * Gets all tracks. If a page is given, will give tracks for that given page.
+     * @route GET /tracks
+     *        parameters: page, sort, order
 	 *
 	 * @return Response
 	 */
@@ -39,14 +41,20 @@ class TracksController extends BaseController {
 
     /**
      * Shows a filtered list of tracks
+     * @route GET /tracks/filter
+     *        parameters: count, sort, order
+     *
+     * @return Response
      */
     public function filter() {
         return Response::json($this->tracks->filter(Input::all()), 200);
     }
 
 	/**
-	 * Display the specified resource.
-	 *
+	 * Gets a single track by track id
+	 * @route GET /tracks/$id
+     *        parameters: token (optional)
+     *
 	 * @param  int  $id
 	 * @return Response
 	 */
@@ -75,6 +83,14 @@ class TracksController extends BaseController {
         }
 	}
 
+    /**
+     * Searches for a track
+     * @route GET /tracks/search/$searchTerms
+     *        parameters: sort, order
+     *
+     * @param $searchTerms
+     * @return Response
+     */
     public function search($searchTerms) {
 
         $sortType = Input::get('sort', 'uploaded');
@@ -98,6 +114,19 @@ class TracksController extends BaseController {
         $response["count" ] = count($searchResults);
 
         return Response::json($response);
+    }
+
+    /**
+     * Gets tracks that are coming soon
+     * @route /tracks/comingsoon
+     *        parameters: count
+     *
+     * @return Response
+     */
+    public function comingSoon() {
+        $count = Input::get('count', 5);
+
+        return Response::json($this->tracks->comingSoon($count), 200);
     }
 
 }

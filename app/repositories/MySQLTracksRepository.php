@@ -37,4 +37,8 @@ class MySQLTracksRepository implements TracksRepositoryInterface {
     public function getStats($trackid) {
         return $this->track->getStats($trackid);
     }
+
+    public function comingSoon($count) {
+        return $this->track->getComingSoon($count);
+    }
 }
