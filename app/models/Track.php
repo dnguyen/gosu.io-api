@@ -24,7 +24,7 @@ class Track extends Eloquent {
                 'artists.id AS artistId'))
             ->join('artists', 'tracks.artist', '=', 'artists.id')
             ->where('tracks.id', '=', $id)
-            ->remember(10)
+            //->remember(10)
             ->get();
 
         if (count($track) > 0) {
@@ -90,7 +90,7 @@ class Track extends Eloquent {
             ->where('tracks.published', '=', '1')
             ->orderBy($sorts['type'], $sorts['order'])
             ->skip($start)->take($end)
-            ->remember(10)
+            //->remember(10)
             ->get();
 
         return $tracks;
