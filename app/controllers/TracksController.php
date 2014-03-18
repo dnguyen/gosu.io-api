@@ -129,4 +129,19 @@ class TracksController extends BaseController {
         return Response::json($this->tracks->comingSoon($count), 200);
     }
 
+    // Test function to update track data with data from YouTube's api
+    public function updateTrack($id) {
+        if (Input::has('token')) {
+            $user = AuthToken::auth(Input::get('token'));
+            if (!is_null($user) && $user->permissions >= 10000) {
+                $this->tracks->updateData($id);
+                return Response::json(NULL, 200);
+            } else {
+                return Response::json(NULL, 404);
+            }
+        } else {
+            return Response::json(NULL, 404);
+        }
+    }
+
 }

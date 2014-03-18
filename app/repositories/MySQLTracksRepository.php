@@ -41,4 +41,36 @@ class MySQLTracksRepository implements TracksRepositoryInterface {
     public function comingSoon($count) {
         return $this->track->getComingSoon($count);
     }
+
+    public function updateData($trackid) {
+        $allTracks = $this->track->getAll();
+
+        foreach ($allTracks as $track) {
+            $json = json_decode(file_get_contents("https://www.googleapis.com/youtube/v3/videos?key=AIzaSyAyoysE1W7YRwXogowu19rUJoTdCIOCnCE&part=id,snippet,statistics&id=" . $track->videoId));
+
+            if (isset($json->items) && count($json->items) > 0) {
+                $videoData = $json->items[0];
+                $thumbUrl = $videoData->snippet->thumbnails->high->url;
+                $thumbOutputPath = '/var/www/yourkpop_thumbs/'. $track->videoId .'.jpg';
+
+                // Save thumbnail if it doesn't exist yet
+                if (!file_exists($thumbOutputPath)) {
+                    file_put_contents($thumbOutputPath, file_get_contents($thumbUrl));
+                }
+
+                if (isset($videoData->statistics)) {
+                    $viewCount = $videoData->statistics->viewCount;
+
+                    // Only update view count if our currently stored view count is off by 25%
+                    if ($viewCount - $track->viewCount > $viewCount * 0.25) {
+                        DB::table('tracks')
+                            ->where('id', '=', $track->id)
+                            ->update(array(
+                                'viewCount' => $viewCount
+                            ));
+                    }
+                }
+            }
+        }
+    }
 }

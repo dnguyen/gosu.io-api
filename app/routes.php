@@ -22,6 +22,7 @@ Route::get('tracks/search/{terms}', 'TracksController@search');
 Route::get('tracks/filter', 'TracksController@filter');
 Route::get('tracks/comingsoon', 'TracksController@comingSoon');
 Route::get('tracks/{id}', 'TracksController@show');
+Route::post('tracks/{id}', 'TracksController@updateTrack');
 Route::get('tracks', 'TracksController@index');
 
 Route::post('votes', 'VotesController@insert');

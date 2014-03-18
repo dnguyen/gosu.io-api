@@ -10,4 +10,5 @@ interface TracksRepositoryInterface {
     public function filter($filterOptions);
     public function getStats($trackid);
     public function comingSoon($count);
+    public function updateData($trackid);
 }

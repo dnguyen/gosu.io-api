@@ -46,6 +46,7 @@ class AuthToken extends Eloquent {
             array(
                 'users.id',
                 'users.username',
+                'users.permissions',
                 'auth_tokens.token'
             )
         )
