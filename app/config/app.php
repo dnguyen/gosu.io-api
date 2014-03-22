@@ -183,4 +183,5 @@ return array(
 
 	),
 
+    'youtubeAPIKey' => 'AIzaSyAyoysE1W7YRwXogowu19rUJoTdCIOCnCE',
 );
