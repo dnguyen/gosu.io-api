@@ -83,28 +83,23 @@ class UpdateData extends Command {
                                 // Once we have the artist, we just remove the artist from the original video
                                 // title to get the title of the track
                                 $titleFragment = str_replace($artistFragment, '', $videoData->title);
+
                                 // Clean up title
                                 if ($channel->title_replace_chars !== '') {
-                                    $titleReplacementChars = explode(',', $channel->title_replace_chars);
-                                    $titleFragment = str_replace($titleReplacementChars, '', $titleFragment);
-                                    $titleFragment = trim($titleFragment);
+                                    $titleFragment = $this->cleanTitle($channel, $titleFragment);
                                 }
                                 $this->line('Title: ' . trim($titleFragment));
 
                                 // Clean up the artist name
-                                $artistReplacementChars = explode(',', $channel->artist_replace_chars);
-                                $artistFragment = str_replace($artistReplacementChars, '', $artistFragment);
-                                $artistFragment = trim($artistFragment);
+                                $artistFragment = $this->cleanArtist($channel, $artistFragment);
                                 $this->line('Artist: ' . trim($artistFragment));
 
                                 $artistInsertId = -1;
-                                // Check if the artist already exists in the database
-                                $artist = DB::table('artists')->select('*')->where('name', '=', $artistFragment)->get();
 
                                 // If the artist already exists, use that id
                                 // If artist doesn't exist yet, add them to the database
-                                if (count($artist) > 0) {
-                                    $artist = $artist[0];
+                                $artist = $this->artistExists($artistFragment);
+                                if (!is_null($artist)) {
                                     $this->line('This artist exists' . $artist->id . ' - ' . $artist->name);
                                     $artistInsertId = $artist->id;
                                 } else {
@@ -172,6 +167,16 @@ class UpdateData extends Command {
         }
     }
 
+    private function artistExists($artistName) {
+        $artist = DB::table('artists')->select('*')->where('name', '=', $artistName)->get();
+
+        if (count($artist) > 0) {
+            return $artist[0];
+        } else {
+            return null;
+        }
+    }
+
     private function getViewCount($videoid) {
         $videoJson = json_decode(
             file_get_contents(
@@ -180,6 +185,22 @@ class UpdateData extends Command {
         $video = $videoJson->items[0];
 
         return $video->statistics->viewCount;
+    }
+
+    private function cleanTitle($channel, $title) {
+        $titleReplacementChars = explode(',', $channel->title_replace_chars);
+        $titleFragment = str_replace($titleReplacementChars, '', $title);
+        $titleFragment = trim($titleFragment);
+
+        return $titleFragment;
+    }
+
+    private function cleanArtist($channel, $artist) {
+        $artistReplacementChars = explode(',', $channel->artist_replace_chars);
+        $artistFragment = str_replace($artistReplacementChars, '', $artist);
+        $artistFragment = trim($artistFragment);
+
+        return $artistFragment;
     }
 
 }
