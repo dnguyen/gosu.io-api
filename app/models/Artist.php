@@ -26,8 +26,8 @@ class Artist extends Eloquent {
         $artistsMatchedCountQuery->orderBy('name', '');
         $artistsMatchedCount = $artistsMatchedCountQuery->count();
 
-        $start = ($page - 1) * 28;
-        $end = $page * 28 - (($page - 1) * 28);
+        $start = ($page - 1) * 32;
+        $end = $page * 32 - (($page - 1) * 32);
 
         $artistsQuery = DB::table('artists')->select('*');
 
@@ -43,7 +43,7 @@ class Artist extends Eloquent {
 
         $artistsQuery->orderBy($sorts['type'], $sorts['order']);
 
-        if ($artistsMatchedCount > 28)
+        if ($artistsMatchedCount > 32)
             $artistsQuery->skip($start)->take($end);
 
         $artists = $artistsQuery->get();
@@ -52,7 +52,7 @@ class Artist extends Eloquent {
     }
 
     public static function getArtistsTotalPageCount() {
-        $totalPagecount = ceil(DB::table('artists')->count() / 28);
+        $totalPagecount = ceil(DB::table('artists')->count() / 32);
 
         return $totalPagecount;
     }

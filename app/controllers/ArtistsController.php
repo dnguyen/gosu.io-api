@@ -101,19 +101,26 @@ class ArtistsController extends BaseController {
 	}
 
     public function search($searchTerms) {
+        $sortType = Input::get('sort', 'name');
+        $order = Input::get('order', 'desc');
         $artists = Artist::getAll();
         $searchResults = array();
+
         $searchArray = explode("+", preg_replace('/\s/', '+', $searchTerms));
         foreach ($searchArray as $searchTerm) {
             $cleanedSearchTerm = strtolower(preg_replace('/[^a-zA-Z0-9-_]/', "", $searchTerm));
             foreach($artists as $artist) {
                 if (strpos(strtolower($artist->name), $cleanedSearchTerm) !== FALSE) {
-                    $searchResults[$artist->id] = $artist;
+                    array_push($searchResults, $artist);
                 }
             }
         }
 
-        return Response::json($searchResults);
+        $response = new stdClass();
+        $response->artists = $searchResults;
+        $response->pageCount = count($searchResults);
+
+        return Response::json($response);
     }
 
 }
