@@ -11,4 +11,5 @@
 |
 */
 
-Artisan::add(new UpdateData);
+Artisan::add(new UpdateDataCommand);
+Artisan::add(new UpdateArtistDataCommand);

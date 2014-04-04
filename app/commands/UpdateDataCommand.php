@@ -4,7 +4,7 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class UpdateData extends Command {
+class UpdateDataCommand extends Command {
 
 	/**
 	 * The console command name.
@@ -92,7 +92,16 @@ class UpdateData extends Command {
 
                                 // Clean up the artist name
                                 $artistFragment = $this->cleanArtist($channel, $artistFragment);
-                                $this->line('Artist: ' . trim($artistFragment));
+
+                                // Try to extract korean name from artist
+                                $artistNameInKorean = '';
+                                preg_match('/\(.*\)/', $artistFragment, $nameInKoreanMatches);
+                                if (count($nameInKoreanMatches) > 0) {
+                                    $artistNameInKorean = $nameInKoreanMatches[0];
+                                    $artistNameInKorean = str_replace(['(', ')'], '', $artistNameInKorean);
+                                }
+
+                                $this->line('Artist: ' . trim($artistFragment) . ' - Korean: ' .trim($artistNameInKorean));
 
                                 $artistInsertId = -1;
 
@@ -104,7 +113,8 @@ class UpdateData extends Command {
                                     $artistInsertId = $artist->id;
                                 } else {
                                     $artistInsertId = DB::table('artists')->insertGetId(array(
-                                        'name' => $artistFragment
+                                        'name' => $artistFragment,
+                                        'korean_name' => $artistNameInKorean
                                     ));
                                 }
 
